@@ -9,7 +9,7 @@ namespace TeamProjеct
     internal class Magazine
     {
         private string name;
-    //    private Frequency frequency;
+        private Frequency frequency;
         private DateTime releaseDate;
         private int circulation;
         private Article[] articles;
@@ -20,11 +20,11 @@ namespace TeamProjеct
             set { name = value; }
         }
 
-        //public Frequency Frequency
-        //{
-        //    get { return frequency; }
-        //    set { frequency = value; }
-        //}
+        public Frequency Frequency
+        {
+            get { return frequency; }
+            set { frequency = value; }
+        }
 
         public DateTime ReleaseDate
         {
@@ -54,24 +54,24 @@ namespace TeamProjеct
             }
         }
 
-        //public bool this[Frequency frequency]
-        //{
-        //    get { return frequency == frequency; }
-        //}
+        public bool this[Frequency frequency]
+        {
+            get { return frequency == frequency; }
+        }
 
-        //public Magazine(string name, Frequency frequency, DateTime releaseDate, int circulation)
-        //{
-        //    Name = name;
-        //    // frequency = frequency;
-        //    ReleaseDate = releaseDate;
-        //    Circulation = circulation;
-        //    Articles = new Article[0];
-        //}
+        public Magazine(string name, Frequency frequency, DateTime releaseDate, int circulation)
+        {
+            Name = name;
+            Frequency = frequency;
+            ReleaseDate = releaseDate;
+            Circulation = circulation;
+            Articles = new Article[0];
+        }
 
         public Magazine()
         {
             name = "Default Magazine";
-          //  frequency = Frequency.Monthly;
+            frequency = Frequency.Monthly;
             releaseDate = DateTime.Now;
             circulation = 1000;
             articles = new Article[0];
@@ -82,15 +82,15 @@ namespace TeamProjеct
             Articles = articles.Concat(articles).ToArray();
         }
 
-        //public override string ToString()
-        //{
-        //    string articlesInfo = string.Join("\n", articles.Select(article => article.ToString()));
-        //    return $"Name: {name}, Frequency: {frequency}, Release Date: {releaseDate}, Circulation: {circulation}\nArticles:\n{articlesInfo}";
-        //}
+        public override string ToString()
+        {
+            string articlesInfo = string.Join("\n", articles.Select(article => article.ToString()));
+            return $"Name: {name}, Frequency: {frequency}, Release Date: {releaseDate}, Circulation: {circulation}\nArticles:\n{articlesInfo}";
+        }
 
-        //public virtual string ToShortString()
-        //{
-        //    return $"Name: {name}, Frequency: {frequency}, Release Date: {releaseDate}, Circulation: {circulation}, Average Rating: {AverageRating}";
-        //}
+        public virtual string ToShortString()
+        {
+            return $"Name: {name}, Frequency: {frequency}, Release Date: {releaseDate}, Circulation: {circulation}, Average Rating: {AverageRating}";
+        }
     }
 }
