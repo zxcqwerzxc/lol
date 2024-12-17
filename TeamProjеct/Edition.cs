@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TeamProjеct;
 
-namespace TeamProjеct
+namespace TeamProject
 {
-
     class Edition : IRateAndCopy
     {
         // Поля
@@ -19,7 +15,7 @@ namespace TeamProjеct
         {
             this.title = title;
             this.releaseDate = releaseDate;
-            this.Circulation = circulation; // Используем свойство для проверки
+            this.circulation = circulation; // Используем свойство для проверки
         }
 
         // Конструктор по умолчанию
@@ -36,14 +32,14 @@ namespace TeamProjеct
             get { return title; }
             set
             {
-               if (value == null)
-            {
+                if (value == null)
+                {
                     throw new ArgumentException("Заголовок не может быть пустым");
+                }
+                else
+                { title = value; }
             }
-               else
-            { title = value; }
-            }
-          
+
         }
 
         public DateTime ReleaseDate
@@ -110,6 +106,12 @@ namespace TeamProjеct
 
         // Переопределенная версия метода ToString
         public override string ToString()
+        {
+            return $"Title: {title}, Release Date: {releaseDate.ToShortDateString()}, Circulation: {circulation}";
+        }
+
+        // Виртуальный метод ToShortString
+        public virtual string ToShortString()
         {
             return $"Title: {title}, Release Date: {releaseDate.ToShortDateString()}, Circulation: {circulation}";
         }
