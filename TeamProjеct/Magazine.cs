@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
 
-namespace TeamProjеct
+namespace TeamProject
 {
-    internal class Magazine
+    internal class Magazine : Edition
     {
-        private string name;
         private Frequency frequency;
-        private DateTime releaseDate;
-        private int circulation;
-        private Article[] articles;
+        private ArrayList editors;
+        private ArrayList articles;
 
         public string Name
         {
-            get { return name; }
-            set { name = value; }
+            get { return Title; }
+            set { Title = value; }
         }
 
         public Frequency Frequency
@@ -26,19 +21,13 @@ namespace TeamProjеct
             set { frequency = value; }
         }
 
-        public DateTime ReleaseDate
+        public ArrayList Editors
         {
-            get { return releaseDate; }
-            set { releaseDate = value; }
+            get { return editors; }
+            set { editors = value; }
         }
 
-        public int Circulation
-        {
-            get { return circulation; }
-            set { circulation = value; }
-        }
-
-        public Article[] Articles
+        public ArrayList Articles
         {
             get { return articles; }
             set { articles = value; }
@@ -48,49 +37,94 @@ namespace TeamProjеct
         {
             get
             {
-                if (articles == null || articles.Length == 0)
+                if (articles == null || articles.Count == 0)
                     return 0.0;
-                return articles.Average(article => article.Rating);
+                double totalRating = 0.0;
+                foreach (Article article in articles)
+                {
+                    totalRating += article.Rating;
+                }
+                return totalRating / articles.Count;
             }
         }
 
-        public bool this[Frequency frequency]
-        {
-            get { return frequency == frequency; }
-        }
-
         public Magazine(string name, Frequency frequency, DateTime releaseDate, int circulation)
+            : base(name, releaseDate, circulation)
         {
-            Name = name;
             Frequency = frequency;
-            ReleaseDate = releaseDate;
-            Circulation = circulation;
-            Articles = new Article[0];
+            Editors = new ArrayList();
+            Articles = new ArrayList();
         }
 
         public Magazine()
+            : base()
         {
-            name = "Default Magazine";
             frequency = Frequency.Monthly;
-            releaseDate = DateTime.Now;
-            circulation = 1000;
-            articles = new Article[0];
+            editors = new ArrayList();
+            articles = new ArrayList();
         }
 
-        public void AddArticles(params Article[] articles)
+        public void AddArticles(params Article[] newArticles)
         {
-            Articles = articles.Concat(articles).ToArray();
+            articles.AddRange(newArticles);
+        }
+
+        public void AddEditors(params Person[] newEditors)
+        {
+            editors.AddRange(newEditors);
         }
 
         public override string ToString()
         {
-            string articlesInfo = string.Join("\n", articles.Select(article => article.ToString()));
-            return $"Name: {name}, Frequency: {frequency}, Release Date: {releaseDate}, Circulation: {circulation}\nArticles:\n{articlesInfo}";
+            string articlesInfo = string.Join("\n", articles.Cast<Article>().Select(article => article.ToString()));
+            string editorsInfo = string.Join("\n", editors.Cast<Person>().Select(editor => editor.ToString()));
+            return $"Name: {Title}, Frequency: {frequency}, Release Date: {ReleaseDate}, Circulation: {Circulation}\nEditors:\n{editorsInfo}\nArticles:\n{articlesInfo}";
         }
 
-        public virtual string ToShortString()
+        public override string ToShortString()
         {
-            return $"Name: {name}, Frequency: {frequency}, Release Date: {releaseDate}, Circulation: {circulation}, Average Rating: {AverageRating}";
+            return $"Name: {Title}, Frequency: {frequency}, Release Date: {ReleaseDate}, Circulation: {Circulation}, Average Rating: {AverageRating}";
+        }
+
+        public override object DeepCopy()
+        {
+            Magazine copy = (Magazine)this.MemberwiseClone();
+            copy.Editors = new ArrayList(editors.Cast<Person>().Select(editor => (Person)editor.DeepCopy()).ToArray());
+            copy.Articles = new ArrayList(articles.Cast<Article>().Select(article => (Article)article.DeepCopy()).ToArray());
+            return copy;
+        }
+
+        public Edition Edition
+        {
+            get { return new Edition(Title, ReleaseDate, Circulation); }
+            set
+            {
+                Title = value.Title;
+                ReleaseDate = value.ReleaseDate;
+                Circulation = value.Circulation;
+            }
+        }
+
+        public IEnumerable GetArticlesWithRatingAbove(double rating)
+        {
+            foreach (Article article in articles)
+            {
+                if (article.Rating > rating)
+                {
+                    yield return article;
+                }
+            }
+        }
+
+        public IEnumerable GetArticlesWithTitleContaining(string substring)
+        {
+            foreach (Article article in articles)
+            {
+                if (article.Title.Contains(substring))
+                {
+                    yield return article;
+                }
+            }
         }
     }
 }

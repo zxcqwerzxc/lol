@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TeamProjеct
+namespace TeamProject
 {
-    internal class Person
+    internal class Person : ICloneable
     {
         String firstName;
         String lastName;
@@ -46,7 +42,7 @@ namespace TeamProjеct
             }
         }
 
-        public int Yers
+        public int Years
         {
             get => birthday.Year;
             set
@@ -54,9 +50,9 @@ namespace TeamProjеct
                 if (value > DateTime.Now.Year)
                     throw new ArgumentException("Передаваемый год больше года в данный момент");
 
-                int differenceYers = DateTime.Now.Year - value;
+                int differenceYears = DateTime.Now.Year - value;
 
-                birthday = birthday.AddYears(-differenceYers);
+                birthday = birthday.AddYears(-differenceYears);
             }
         }
 
@@ -77,5 +73,45 @@ namespace TeamProjеct
         public override string ToString() => $"Имя: {firstName}; Фамилия: {LastName}; год рождения: {birthday.ToShortDateString()}";
 
         public virtual string ToShortString() => $"Имя: {firstName}; Фамилия: {LastName}";
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            Person person = (Person)obj;
+            return firstName == person.firstName && lastName == person.lastName && birthday == person.birthday;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(firstName, lastName, birthday);
+        }
+
+        public static bool operator ==(Person p1, Person p2)
+        {
+            if (ReferenceEquals(p1, p2))
+                return true;
+
+            if (p1 is null || p2 is null)
+                return false;
+
+            return p1.Equals(p2);
+        }
+
+        public static bool operator !=(Person p1, Person p2)
+        {
+            return !(p1 == p2);
+        }
+
+        public object Clone()
+        {
+            return new Person(firstName, lastName, birthday);
+        }
+
+        public Person DeepCopy()
+        {
+            return new Person(firstName, lastName, birthday);
+        }
     }
 }

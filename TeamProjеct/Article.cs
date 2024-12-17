@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TeamProjеct
+namespace TeamProject
 {
-    internal class Article
+    internal class Article : ICloneable
     {
         public Person Author { get; set; }
         public string Title { get; set; }
@@ -31,7 +27,19 @@ namespace TeamProjеct
         // Перегруженная версия метода ToString()
         public override string ToString()
         {
-            return $"Article Title: {Title}  Rating: {Rating} Author: {Author}";
+            return $"Article Title: {Title}, Rating: {Rating}, Author: {Author}";
+        }
+
+        // Метод для глубокого копирования
+        public object Clone()
+        {
+            return new Article(Title, Rating, (Person)Author.DeepCopy());
+        }
+
+        // Метод для глубокого копирования
+        public Article DeepCopy()
+        {
+            return new Article(Title, Rating, (Person)Author.DeepCopy());
         }
     }
 }
